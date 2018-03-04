@@ -1,0 +1,17 @@
+environments:
+  dev:
+    url: http://dev.example.com
+    name: Developer Setup
+  prod:
+    url: http://another.example.com
+    name: My Cool App
+
+age: 888
+name: some yaml configuration
+
+other:
+  persons:
+    names:
+      - franek
+      - ziutek
+      - ela
