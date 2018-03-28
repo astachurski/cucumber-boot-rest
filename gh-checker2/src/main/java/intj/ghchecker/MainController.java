@@ -1,16 +1,24 @@
 package intj.ghchecker;
 
+import com.fasterxml.jackson.core.JsonFactory;
+import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
+import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
+import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
+import com.google.api.client.http.HttpTransport;
+import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.json.jackson2.JacksonFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.InputStreamReader;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-@RestController
+@Controller
 public class MainController {
 
 
@@ -23,7 +31,28 @@ public class MainController {
     @Autowired
     private SiteMetadataExtractor siteMetadataExtractor;
 
+    @RequestMapping(value = "/", method = RequestMethod.GET)
+    public String main(Model model) throws Exception {
+
+        List<TrackingEntity> trackingAccountsDetails = trackingAccountsService.getTrackingAccountsDetails();
+
+        model.addAttribute("trackingAccountsDetails", trackingAccountsDetails);
+
+        /*for (TrackingEntity te: trackingAccountsDetails){
+            System.out.println(te.toString());
+
+        }*/
+
+        //List<String> hostsToCheck = hostNameService.hostNames();
+
+        return "main";
+
+    }
+
+
+
     @GetMapping(value = "/test")
+    @ResponseBody
     public String test(@RequestParam(value = "address") String addressToCheck) throws Exception {
 
         List<TrackingEntity> trackingAccountsDetails = trackingAccountsService.getTrackingAccountsDetails();
