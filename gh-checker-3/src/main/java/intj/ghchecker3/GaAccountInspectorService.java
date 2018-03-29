@@ -10,6 +10,9 @@ import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.services.analytics.Analytics;
 import com.google.api.services.analytics.AnalyticsScopes;
 import com.google.api.services.analytics.model.*;
+import org.omg.CORBA.INTERNAL;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -30,11 +33,13 @@ public class GaAccountInspectorService {
     private static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
     private static final String KEY_FILE_LOCATION = "/home/adrian/Development/SDA/Spring/gh-checker-3/src/main/resources/client_secrets.json";
 
+    private static Logger logger = LoggerFactory.getLogger("GaAccountInspectorService");
+
     private Analytics analytics;
 
     public static void main(String[] args) throws IOException {
         GaAccountInspectorService gaAccountInspectorService = new GaAccountInspectorService();
-        gaAccountInspectorService.getAccountsReports();
+        gaAccountInspectorService.getTrackinEntityReport(1);
     }
 
     @PostConstruct
@@ -57,22 +62,23 @@ public class GaAccountInspectorService {
                 .setApplicationName(APPLICATION_NAME).build();
     }
 
-    public List<AccountReportItem> getAccountsReports() throws IOException {
+    public List<TrackingEntity> getTrackinEntityReport(Integer limit) throws IOException {
 
-
-        List<AccountReportItem> reports = new ArrayList<>();
+        List<TrackingEntity> trackingEntitiesReports = new ArrayList<>();
 
         // Query for the list of all accounts associated with the service account.
         Accounts accounts = analytics.management().accounts().list().execute();
 
+        Long counter = 0L;
+
         // ----------- traversing GA accounts
         for (Account account : accounts.getItems()) {
 
-            AccountReportItem accountReportItem = new AccountReportItem(account.getId(), account.getName());
+            counter++;
 
-            //System.out.println("account id: " + account.getId() + "  -  " + account.getName());
+            logger.info("acquired from GA data on : " +
+                    account.getId() + "/" + account.getName() + "/" + account.getKind());
 
-/*
             // Query for the list of properties associated with the account.
             Webproperties properties = analytics.management().webproperties()
                     .list(account.getId()).execute();
@@ -80,19 +86,23 @@ public class GaAccountInspectorService {
             // traversing properties/applications
             for (Webproperty webproperty : properties.getItems()) {
 
-                Profiles profiles = analytics.management().profiles()
+                logger.info("acuired data on property: " + webproperty.getId() + "/" + webproperty.getWebsiteUrl());
+
+                trackingEntitiesReports.add(new TrackingEntity(0L, account.getName(), webproperty.getName(), webproperty.getId()));
+
+              /*  Profiles profiles = analytics.management().profiles()
                         .list(account.getId(), webproperty.getId()).execute();
 
                 // traversing views/profiles for property/application
                 for (Profile profile : profiles.getItems()) {
                     getProfileReports(profile, analytics);
-                }
+                }*/
             }
-*/
 
-            reports.add(accountReportItem);
+            if ((counter >= limit) && (limit > 0))
+                break;
         }
-        return reports;
+        return trackingEntitiesReports;
     }
 
     private List<String> getPropertyReport(Webproperty webproperty, Analytics analytics) {

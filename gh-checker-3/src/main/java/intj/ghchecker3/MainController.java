@@ -1,5 +1,6 @@
 package intj.ghchecker3;
 
+import com.sun.org.apache.xpath.internal.operations.Mod;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,6 @@ public class MainController {
 
     private static Logger logger = LoggerFactory.getLogger("MainController");
 
-
     @Autowired
     private TrackingAccountsService trackingAccountsService;
 
@@ -32,18 +32,21 @@ public class MainController {
     private GaAccountInspectorService gaAccountInspectorService;
 
 
-    @GetMapping(value = "report")
-    @ResponseBody
-    public String getAdvisorsAccountReports() {
+    @GetMapping(value = "ma-accounts-report")
+    public String getAdvisorsAccountOverview(Model model,
+                                             @RequestParam(value = "limit", required = false, defaultValue = "0") Integer limit) {
 
-        List<AccountReportItem> accountsReports = null;
+        List<TrackingEntity> accountsReports = new ArrayList<>();
+
         try {
-            accountsReports = gaAccountInspectorService.getAccountsReports();
+            accountsReports.addAll(gaAccountInspectorService.getTrackinEntityReport(limit));
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        return accountsReports.toString();
+        model.addAttribute("trackingEntities", accountsReports);
+
+        return "ma-accounts-report";
 
     }
 

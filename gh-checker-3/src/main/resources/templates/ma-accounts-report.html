@@ -1,0 +1,56 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Getting Started: Serving Web Content</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <script
+            src="https://code.jquery.com/jquery-1.12.4.js"
+            integrity="sha256-Qw82+bXyGq6MydymqBxNPYTaUXXq7c8v3CwiYwLLNXU="
+            crossorigin="anonymous"></script>
+
+    <script type="text/javascript" src="/js/bootstrap-table.js"></script>
+    <script type="text/javascript" src="/js/Chart.bundle.js"></script>
+    <script type="text/javascript" src="/js/datatable.js"></script>
+    <link rel="stylesheet" href="/css/bootstrap-table.css">
+    <link rel="stylesheet" href="/css/datatable.css">
+
+</head>
+<body>
+
+
+<h5>Media Advisors GA accounts report</h5>
+<h6>This report enumerates all MA GA accounts for which reporting service account has been set up. </h6>
+<br>
+
+<br>
+
+<!--<table data-toggle="table" data-url="https://api.github.com/users/wenzhixin/repos?type=owner&sort=full_name&direction=asc&per_page=100&page=1"
+data-sort-name="stargazers_count" data-sort-order="desc">
+ <thead> <tr> <th data-field="name" data-sortable="true"> Name </th> <th data-field="stargazers_count" data-sortable="true"> Stars </th> <th data-field="forks_count" data-sortable="true"> Forks </th> <th data-field="description" data-sortable="true"> Description </th> </tr></thead></table><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.min.js"></script>-->
+
+<table class="table datatable">
+    <thead class="thead-light">
+    <tr>
+        <th data-field="name" data-sortable="true">account name</th>
+        <th data-sortable="true">tracking id</th>
+        <th data-sortable="true">property name</th>
+    </tr>
+    </thead>
+
+    <tr th:each="trackingAccount : ${trackingEntities}">
+        <td th:text="${trackingAccount.getAccountName()}">name</td>
+        <td th:text="${trackingAccount.getTrackingId()}">tracking id</td>
+        <td th:text="${trackingAccount.getPropertyName()}">property name</td>
+    </tr>
+</table>
+
+
+<br>
+
+
+</body>
+</html>
