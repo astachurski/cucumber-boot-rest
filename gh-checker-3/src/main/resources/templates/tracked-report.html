@@ -9,7 +9,9 @@
 <body>
 
 
-<h5>GH tracking accounts report</span></h5>
+<h5>GrowthHouse tracking accounts report</h5>
+<h6>This raport uses GrowthHouse GA Accounts data (tracked properties) and tracking codes
+    extracted from analyzed website to check if GH is used as data sink by JS tracking snippet</h6>
 <br>
 <br>
 
@@ -31,16 +33,13 @@
         <th>account name</th>
         <th>tracking id</th>
         <th>property name</th>
-        <th>Id</th>
     </tr>
     </thead>
 
     <tr th:each="trackingAccount : ${trackingAccounts}">
         <td th:text="${trackingAccount.getAccountName()}">name</td>
-        <td th:text="${trackingAccount.getTrackingId()}">name</td>
-        <td th:text="${trackingAccount.getPropertyName()}">name</td>
-        <td th:text="${trackingAccount.getId()}">name</td>
-
+        <td th:text="${trackingAccount.getTrackingId()}">tracking id</td>
+        <td th:text="${trackingAccount.getPropertyName()}">property name</td>
     </tr>
 </table>
 

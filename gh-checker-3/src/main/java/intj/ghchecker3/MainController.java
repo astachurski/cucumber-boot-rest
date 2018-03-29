@@ -95,21 +95,17 @@ public class MainController {
             logger.info(" NO TRACKING CODES extracted for: " + hostName);
 
         model.addAttribute("trackingAccounts", trackedHostGrowthHouseReport);
-
         model.addAttribute("trackedMessage", trackedHostGrowthHouseReport.size() > 0);
-
         model.addAttribute("trackedHost", hostName);
 
         return "tracked-report";
     }
 
 
-
-
-
-    @RequestMapping(value = "/check-host", method = RequestMethod.GET)
-    @ResponseBody
-    public String checkHostName(@RequestParam(value = "address") String addressToCheck) throws Exception {
+    @RequestMapping(value = "/check-host-codes", method = RequestMethod.GET)
+    public String checkHostName(
+            @RequestParam(value = "address") String addressToCheck,
+            Model model) throws Exception {
 
         List<String> hostsToCheck = new ArrayList<>();
         if (addressToCheck != null)
@@ -121,12 +117,12 @@ public class MainController {
         int checkedBad = 0;
         int uaCodesExtracted = 0;
 
+        List<String> uaCodes = new ArrayList<>();
+
         for (String hostName : hostsToCheck) {
-
-            System.out.println("-- extracting metadata for: " + hostName);
-
+            logger.info("-- extracting metadata for: " + hostName);
             try {
-                List<String> uaCodes = siteMetadataExtractor.getUACodes(hostName);
+                uaCodes.addAll(siteMetadataExtractor.getUACodes(hostName));
                 checkedOk++;
                 for (String uaCode : uaCodes) {
                     logger.info("extracted UA code:   " + uaCode);
@@ -136,7 +132,6 @@ public class MainController {
                 checkedBad++;
 
                 logger.info(" ===== problem with site: " + hostName + "  - " + e.getMessage());
-
             }
         }
 
@@ -144,6 +139,10 @@ public class MainController {
         logger.info("   tracking codes extracted : " + uaCodesExtracted);
         logger.info(" hosts NOT checked successfully : " + checkedBad);
 
-        return "bub";
+        model.addAttribute("hostName", addressToCheck);
+
+        model.addAttribute("codesExtracted", uaCodes);
+
+        return "host-check";
     }
 }

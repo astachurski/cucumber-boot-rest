@@ -1,0 +1,39 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Getting Started: Serving Web Content</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</head>
+<body>
+
+
+<h5>Website UA-code check</h5>
+<h6>This raport allows for quick-check of GA tracking codes on website </h6>
+<br>
+
+<h2 align="center">
+    Testing <b><span th:bgcolor="yello" th:text="${hostName}">host to check</span></b> ...
+</h2>
+
+<br>
+
+<table class="table table-bordered table-hover">
+
+    <thead class="thead-light">
+    <tr>
+        <th>UA-code detected</th>
+    </tr>
+    </thead>
+
+    <tr th:each="code : ${codesExtracted}">
+        <td th:text="${code}">UA-code</td>
+    </tr>
+</table>
+
+<br>
+
+
+</body>
+</html>
