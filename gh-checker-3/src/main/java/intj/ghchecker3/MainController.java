@@ -1,6 +1,5 @@
 package intj.ghchecker3;
 
-import com.sun.org.apache.xpath.internal.operations.Mod;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +7,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import javax.jws.WebParam;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -53,7 +51,7 @@ public class MainController {
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String main(Model model) throws Exception {
 
-        List<TrackingEntity> trackingAccountsDetails = trackingAccountsService.getTrackingAccountsDetails();
+        List<TrackingEntity> trackingAccountsDetails = trackingAccountsService.getInitializeTrackingAccountsDetails();
 
         model.addAttribute("trackingAccountsDetails", trackingAccountsDetails);
 
@@ -72,7 +70,7 @@ public class MainController {
     @ResponseBody
     public String checkTrackingAccounts() throws Exception {
 
-        List<TrackingEntity> trackingAccountsDetails = trackingAccountsService.getTrackingAccountsDetails();
+        List<TrackingEntity> trackingAccountsDetails = trackingAccountsService.getInitializeTrackingAccountsDetails();
 
         for (TrackingEntity te : trackingAccountsDetails) {
             logger.info(te.toString());
@@ -84,7 +82,7 @@ public class MainController {
     @RequestMapping(value = "/check-host-gh-tracked", method = RequestMethod.GET)
     public String checkHostTrackedByGrowthHouse(@RequestParam(value = "address") String hostName,
                                                 Model model) throws Exception {
-        List<TrackingEntity> trackingAccountsDetails = trackingAccountsService.getTrackingAccountsDetails();
+        List<TrackingEntity> trackingAccountsDetails = trackingAccountsService.getInitializeTrackingAccountsDetails();
         for (TrackingEntity te : trackingAccountsDetails) {
             logger.info(te.toString());
         }

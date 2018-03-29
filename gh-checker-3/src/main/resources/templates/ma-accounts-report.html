@@ -40,15 +40,21 @@
     <thead>
     <tr>
         <th data-tag="true" data-field="name" data-sortable="true">account name</th>
+        <th data-tag="true" data-sortable="true">growth house account</th>
         <th data-field="tracking id" data-sortable="true">tracking id</th>
         <th data-field="property" data-sortable="true">property name</th>
+        <th data-field="website" data-sortable="true">website</th>
+        <th data-field="profilesd" data-value-type="list">profiles</th>
     </tr>
     </thead>
 
     <tr th:each="trackingAccount : ${trackingEntities}">
         <td th:text="${trackingAccount.getAccountName()}">name</td>
+        <td th:text="${trackingAccount.getGrowthHouse()}">name</td>
         <td th:text="${trackingAccount.getTrackingId()}">tracking id</td>
         <td th:text="${trackingAccount.getPropertyName()}">property name</td>
+        <td th:text="${trackingAccount.getWebsite()}">website</td>
+        <td th:text="${trackingAccount.getProfiles()}">profiles</td>
     </tr>
 </table>
 

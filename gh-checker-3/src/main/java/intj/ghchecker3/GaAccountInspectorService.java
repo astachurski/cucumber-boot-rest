@@ -13,6 +13,7 @@ import com.google.api.services.analytics.model.*;
 import org.omg.CORBA.INTERNAL;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -36,6 +37,9 @@ public class GaAccountInspectorService {
     private static Logger logger = LoggerFactory.getLogger("GaAccountInspectorService");
 
     private Analytics analytics;
+
+    @Autowired
+    private TrackingAccountsService trackingAccountsService;
 
     public static void main(String[] args) throws IOException {
         GaAccountInspectorService gaAccountInspectorService = new GaAccountInspectorService();
@@ -88,16 +92,37 @@ public class GaAccountInspectorService {
 
                 logger.info("acuired data on property: " + webproperty.getId() + "/" + webproperty.getWebsiteUrl());
 
-                trackingEntitiesReports.add(new TrackingEntity(0L, account.getName(), webproperty.getName(), webproperty.getId()));
+                TrackingEntity trackingEntity =
+                        new TrackingEntity(0L,
+                                account.getName(),
+                                webproperty.getName(),
+                                webproperty.getId(),
+                                webproperty.getWebsiteUrl());
 
-              /*  Profiles profiles = analytics.management().profiles()
+                Boolean isGhTrackingEntity = trackingAccountsService.isTrackingEntityGrowthHouse(trackingEntity);
+
+                logger.info(" is tracking entity GrowthHouse ? : " + isGhTrackingEntity);
+
+                trackingEntity.setGrowthHouse(isGhTrackingEntity);
+
+
+                Profiles profiles = analytics.management().profiles()
                         .list(account.getId(), webproperty.getId()).execute();
 
                 // traversing views/profiles for property/application
+
+                StringBuilder sb = new StringBuilder();
                 for (Profile profile : profiles.getItems()) {
-                    getProfileReports(profile, analytics);
-                }*/
+                    sb.append(profile.getName() + ",");
+                    logger.info("VIEW found: " + profile.getName());
+                    //getProfileReports(profile, analytics);
+                }
+
+                trackingEntity.setProfiles(sb.toString());
+
+                trackingEntitiesReports.add(trackingEntity);
             }
+
 
             if ((counter >= limit) && (limit > 0))
                 break;
