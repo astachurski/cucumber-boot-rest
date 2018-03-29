@@ -1,6 +1,7 @@
 package intj.ghchecker3;
 
 
+//something that is meant to TRACK (as sink) javascript datasources (snippets with UA-codes on remote hosts)
 public class TrackingEntity {
     private Long id;
     private String accountName;

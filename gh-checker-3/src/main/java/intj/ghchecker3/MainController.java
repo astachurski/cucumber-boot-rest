@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.jws.WebParam;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -76,6 +77,34 @@ public class MainController {
 
         return "";
     }
+
+    @RequestMapping(value = "/check-host-gh-tracked", method = RequestMethod.GET)
+    public String checkHostTrackedByGrowthHouse(@RequestParam(value = "address") String hostName,
+                                                Model model) throws Exception {
+        List<TrackingEntity> trackingAccountsDetails = trackingAccountsService.getTrackingAccountsDetails();
+        for (TrackingEntity te : trackingAccountsDetails) {
+            logger.info(te.toString());
+        }
+
+        List<String> uaCodes = siteMetadataExtractor.getUACodes(hostName);
+
+        List<TrackingEntity> trackedHostGrowthHouseReport = new ArrayList<>();
+        if (uaCodes.size() > 0) {
+            trackedHostGrowthHouseReport.addAll(trackingAccountsService.getTrackedHostGrowthHouseReport(uaCodes));
+        } else
+            logger.info(" NO TRACKING CODES extracted for: " + hostName);
+
+        model.addAttribute("trackingAccounts", trackedHostGrowthHouseReport);
+
+        model.addAttribute("trackedMessage", trackedHostGrowthHouseReport.size() > 0);
+
+        model.addAttribute("trackedHost", hostName);
+
+        return "tracked-report";
+    }
+
+
+
 
 
     @RequestMapping(value = "/check-host", method = RequestMethod.GET)

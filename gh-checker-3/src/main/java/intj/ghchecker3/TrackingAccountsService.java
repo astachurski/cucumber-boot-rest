@@ -44,4 +44,17 @@ public class TrackingAccountsService {
         return trackingEntities;
     }
 
+    public List<TrackingEntity> getTrackedHostGrowthHouseReport(List<String> hostTrackingUAcodes) {
+
+        List<TrackingEntity> results = new ArrayList<>();
+
+        for (String uaHostCode : hostTrackingUAcodes) {
+            if (this.trackingEntitiesMap.get(uaHostCode) != null) {
+                results.add(this.trackingEntitiesMap.get(uaHostCode));
+            }
+        }
+
+        return results;
+    }
+
 }
