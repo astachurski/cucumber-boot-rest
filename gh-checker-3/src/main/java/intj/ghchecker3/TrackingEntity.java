@@ -7,6 +7,7 @@ package intj.ghchecker3;
 public class TrackingEntity {
     private Long id;
     private String accountName;
+    private String accountNumber;
     private String propertyName;
     private String trackingId;
     private Boolean growthHouse = false;
@@ -21,6 +22,14 @@ public class TrackingEntity {
         this.propertyName = propertyName;
         this.trackingId = trackingId;
         this.website = website;
+    }
+
+    public void setAccountNumber(String accountNumber) {
+        this.accountNumber = accountNumber;
+    }
+
+    public String getAccountNumber() {
+        return accountNumber;
     }
 
     public void setSendingGAcodes(Integer sendingGAcodes) {

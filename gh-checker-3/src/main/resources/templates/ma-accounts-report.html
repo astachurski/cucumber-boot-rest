@@ -40,6 +40,7 @@
     <thead>
     <tr>
         <th data-align="center" data-tag="true" data-field="name" data-sortable="true">account name</th>
+        <th data-align="center" data-field="account-number" data-sortable="true">account #</th>
         <th data-align="center" data-tag="true" data-field="ghAccount" data-sortable="true">growth house account</th>
         <th data-align="center" data-field="tracking id" data-sortable="true">tracking id</th>
         <th data-align="center" data-field="property" data-sortable="true">property name</th>
@@ -48,13 +49,14 @@
         <th class="sep-left-cell" data-align="center" data-field="extracted codes" data-value-type="list">host extracted
             codes
         </th>
-        <th data-align="center" data-tag="true" data-field="sending #" data-value-type="int">sending GA #</th>
+        <th data-align="center" data-tag="true" data-field="sending #" data-value-type="int">Tracker invoked #</th>
         <th class="sep-left-cell" data-align="left" data-field="profiles" data-value-type="list">analytics profiles</th>
     </tr>
     </thead>
 
     <tr th:each="trackingAccount : ${trackingEntities}">
         <td th:text="${trackingAccount.getAccountName()}">name</td>
+        <td th:text="${trackingAccount.getAccountNumber()}">name</td>
         <td th:text="${trackingAccount.getGrowthHouse()}">name</td>
         <td th:text="${trackingAccount.getTrackingId()}">tracking id</td>
         <td th:text="${trackingAccount.getPropertyName()}">property name</td>

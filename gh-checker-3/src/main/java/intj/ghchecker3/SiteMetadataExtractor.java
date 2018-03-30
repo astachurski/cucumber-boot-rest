@@ -1,5 +1,7 @@
 package intj.ghchecker3;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -11,6 +13,8 @@ import java.util.regex.Pattern;
 
 @Service
 public class SiteMetadataExtractor {
+
+    private static Logger logger = LoggerFactory.getLogger("SiteMetadataExtractor");
 
     @Autowired
     private RestTemplate restTemplate;
@@ -31,17 +35,27 @@ public class SiteMetadataExtractor {
 
             siteExtractionReport.setUaCodes(localResultUAcodes);
 
-            Pattern patternDoubleSend1 = Pattern.compile("ga\\('send'");
+            String patternStr = "ga\\('[a-z]*\\.*send'|__gaTracker\\('send'";
+            Pattern patternDoubleSend1 = Pattern.compile(patternStr);
+
+
             Matcher matcherDoubleSend1 = patternDoubleSend1.matcher(resp);
+            //boolean skipGroupZero = true;
             while (matcherDoubleSend1.find()) {
+                // if (!skipGroupZero)
                 localResultDoubleSend1.add(matcherDoubleSend1.group().trim());
+                // else
+                // skipGroupZero = false;
+
             }
+
+            //https://www.freeformatter.com/java-regex-tester.html#ad-output
 
             siteExtractionReport.setSendOccurences(localResultDoubleSend1.size());
 
 
         } else {
-            System.out.println(" --------------- failed retrieving data for : " + hostName);
+            logger.info(" --------------- failed retrieving data for : " + hostName);
         }
         return siteExtractionReport;
     }

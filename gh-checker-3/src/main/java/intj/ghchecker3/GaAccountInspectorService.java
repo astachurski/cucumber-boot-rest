@@ -99,11 +99,10 @@ public class GaAccountInspectorService {
                                 webproperty.getWebsiteUrl());
 
                 Boolean isGhTrackingEntity = trackingGHAccountsService.isTrackingEntityGrowthHouse(trackingEntity);
-
                 logger.info(" is tracking entity GrowthHouse ? : " + isGhTrackingEntity);
 
                 trackingEntity.setGrowthHouse(isGhTrackingEntity);
-
+                trackingEntity.setAccountNumber(account.getId());
 
                 Profiles profiles = analytics.management().profiles()
                         .list(account.getId(), webproperty.getId()).execute();
@@ -118,7 +117,6 @@ public class GaAccountInspectorService {
                 }
 
                 trackingEntity.setProfiles(sb.toString());
-
                 trackingEntitiesReports.add(trackingEntity);
             }
 

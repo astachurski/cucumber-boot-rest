@@ -2,11 +2,15 @@
 |WordPress      | Development tracking | UA-38535320-2  |
 |Editap         | Editap1 PX           | UA-92879968-1  |
 |Editap         | Editap1 loggedIn     | UA-92879968-2  |
-| Web +          | Web+                 | UA-33509963-1  |
-| Web +          | Web1                 | UA-33509963-4  |
-| Web +          | Web2                 | UA-33509963-3  |
-| Web +          | Web3                 | UA-33509963-5  |
-| Portal General | Portal General       | UA-36045292-1  |
-| Portal General | Akademikerne         | UA-36045292-2  |
-| Portal General | National Theatret    | UA-36045292-4  |
-| Portal General | pf.no                | UA-36045292-3  |
+|Web +          | Web+                 | UA-33509963-1  |
+|Web +          | IW2                  | UA-33509963-2  |
+|Web +          | Web2                 | UA-33509963-3  |
+|Web +          | Web1                 | UA-33509963-4  |
+|Web +          | Web3                 | UA-33509963-5  |
+|Web +          | Fry                  | UA-33509963-6  |
+|Web +          | Test servers         | UA-33509963-7  |
+|Web +          | Development Tracking - IW+   | UA-33509963-8  |
+|Portal General | Portal General       | UA-36045292-1  |
+|Portal General | Akademikerne         | UA-36045292-2  |
+|Portal General | National Theatret    | UA-36045292-4  |
+|Portal General | pf.no                | UA-36045292-3  |

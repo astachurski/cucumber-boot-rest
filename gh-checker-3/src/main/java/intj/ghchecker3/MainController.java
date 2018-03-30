@@ -92,40 +92,23 @@ public class MainController {
     public String checkHostName(@RequestParam(value = "address") String addressToCheck,
                                 Model model) throws Exception {
 
-        List<String> hostsToCheck = new ArrayList<>();
-        if (addressToCheck != null)
-            hostsToCheck.add(addressToCheck);
-        else
-            hostsToCheck.addAll(hostNameService.hostNames());
-
-        int checkedOk = 0;
-        int checkedBad = 0;
-        int uaCodesExtracted = 0;
-
         List<String> uaCodes = new ArrayList<>();
 
-        for (String hostName : hostsToCheck) {
-            logger.info("-- extracting metadata for: " + hostName);
-            try {
-                uaCodes.addAll(siteMetadataExtractor.getExtractionReport(hostName).getUaCodes());
-                checkedOk++;
-                for (String uaCode : uaCodes) {
-                    logger.info("extracted UA code:   " + uaCode);
-                    uaCodesExtracted++;
-                }
-            } catch (Exception e) {
-                checkedBad++;
+        SiteExtractionReport siteExtractionReport;
+        Integer sendOccurrences = 0;
 
-                logger.info(" ===== problem with site: " + hostName + "  - " + e.getMessage());
-            }
+        try {
+            siteExtractionReport = siteMetadataExtractor.getExtractionReport(addressToCheck);
+            uaCodes.addAll(siteExtractionReport.getUaCodes());
+            sendOccurrences = siteExtractionReport.getSendOccurences();
+
+        } catch (Exception e) {
+            logger.info("problem accessing host: " + addressToCheck);
         }
-
-        logger.info(" hosts checked successfully : " + checkedOk);
-        logger.info("   tracking codes extracted : " + uaCodesExtracted);
-        logger.info(" hosts NOT checked successfully : " + checkedBad);
 
         model.addAttribute("hostName", addressToCheck);
         model.addAttribute("codesExtracted", uaCodes);
+        model.addAttribute("sendOccurrences", sendOccurrences);
 
         return "host-check";
     }

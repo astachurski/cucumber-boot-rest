@@ -22,9 +22,7 @@ public class TrackingGHAccountsService {
 
     @PostConstruct
     public void init() throws Exception {
-        File file = new File("/home/adrian/Development/SDA/Spring/gh-checker2/src/main/resources/static/GH-accounts");
-
-        List<TrackingEntity> trackingEntities = new ArrayList<>();
+        File file = new File("/home/adrian/Development/SDA/Spring/gh-checker-3/src/main/resources/static/GH-accounts");
 
         FileReader fileReader = new FileReader(file);
         BufferedReader bufferedReader = new BufferedReader(fileReader);
