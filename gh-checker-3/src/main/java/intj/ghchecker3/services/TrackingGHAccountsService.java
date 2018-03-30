@@ -1,12 +1,13 @@
-package intj.ghchecker3;
+package intj.ghchecker3.services;
 
+import intj.ghchecker3.TrackingEntity;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
+
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.HashMap;

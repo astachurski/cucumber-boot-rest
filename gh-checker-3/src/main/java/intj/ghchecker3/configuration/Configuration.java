@@ -1,4 +1,4 @@
-package intj.ghchecker3;
+package intj.ghchecker3.configuration;
 
 
 import org.springframework.boot.web.client.RestTemplateBuilder;

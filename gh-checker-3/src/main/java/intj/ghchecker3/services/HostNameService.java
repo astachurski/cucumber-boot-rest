@@ -1,4 +1,4 @@
-package intj.ghchecker3;
+package intj.ghchecker3.services;
 
 import org.springframework.stereotype.Service;
 

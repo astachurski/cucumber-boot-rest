@@ -1,4 +1,4 @@
-package intj.ghchecker3;
+package intj.ghchecker3.services;
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
@@ -10,6 +10,7 @@ import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.services.analytics.Analytics;
 import com.google.api.services.analytics.AnalyticsScopes;
 import com.google.api.services.analytics.model.*;
+import intj.ghchecker3.TrackingEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -16,7 +16,7 @@ public class TrackingEntity {
     private String websiteActualCodes; // from crawling/parsing!
     private Integer sendingGAcodes;// from crawling/parsing!
 
-    TrackingEntity(Long id, String accountName, String propertyName, String trackingId, String website) {
+    public TrackingEntity(Long id, String accountName, String propertyName, String trackingId, String website) {
         this.id = id;
         this.accountName = accountName;
         this.propertyName = propertyName;
