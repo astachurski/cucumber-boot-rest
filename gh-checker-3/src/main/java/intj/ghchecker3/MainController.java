@@ -73,6 +73,16 @@ public class MainController {
         return "ma-accounts-report";
     }
 
+    @GetMapping(value = "get-cached-report")
+    public String getCachedReport(Model model) {
+
+        model.addAttribute("trackingEntities", trackingEntityRepository.findAll());
+
+        return "ma-accounts-report";
+    }
+
+
+
     @RequestMapping(value = "/check-host-gh-tracked", method = RequestMethod.GET)
     public String checkHostTrackedByGrowthHouse(@RequestParam(value = "address") String hostName,
                                                 Model model) throws Exception {
