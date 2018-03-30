@@ -18,7 +18,7 @@ public class MainController {
     private static Logger logger = LoggerFactory.getLogger("MainController");
 
     @Autowired
-    private TrackingAccountsService trackingAccountsService;
+    private TrackingGHAccountsService trackingGHAccountsService;
 
     @Autowired
     private HostNameService hostNameService;
@@ -32,7 +32,9 @@ public class MainController {
 
     @GetMapping(value = "ma-accounts-report")
     public String getAdvisorsAccountOverview(Model model,
-                                             @RequestParam(value = "limit", required = false, defaultValue = "0") Integer limit) {
+                                             @RequestParam(value = "limit",
+                                                     required = false,
+                                                     defaultValue = "0") Integer limit) {
 
         List<TrackingEntity> accountsReports = new ArrayList<>();
 
@@ -42,56 +44,39 @@ public class MainController {
             e.printStackTrace();
         }
 
+        for (TrackingEntity trackingEntity : accountsReports) {
+            try {
+                SiteExtractionReport siteExtractionReport = siteMetadataExtractor.getExtractionReport(trackingEntity.getWebsite());
+                List<String> codes = siteExtractionReport.getUaCodes();
+                StringBuilder sb = new StringBuilder();
+                codes.forEach(code -> sb.append(code + ","));
+                trackingEntity.setWebsiteActualCodes(sb.toString());
+                trackingEntity.setSendingGAcodes(siteExtractionReport.getSendOccurences());
+
+            } catch (Exception e) {
+                trackingEntity.setWebsiteActualCodes("--?--");
+
+            }
+        }
+
         model.addAttribute("trackingEntities", accountsReports);
 
         return "ma-accounts-report";
-
-    }
-
-    @RequestMapping(value = "/", method = RequestMethod.GET)
-    public String main(Model model) throws Exception {
-
-        List<TrackingEntity> trackingAccountsDetails = trackingAccountsService.getInitializeTrackingAccountsDetails();
-
-        model.addAttribute("trackingAccountsDetails", trackingAccountsDetails);
-
-        for (TrackingEntity te : trackingAccountsDetails) {
-            System.out.println(te.toString());
-
-        }
-
-        //List<String> hostsToCheck = hostNameService.hostNames();
-
-        return "main";
-
-    }
-
-    @RequestMapping(value = "/check-tracking", method = RequestMethod.GET)
-    @ResponseBody
-    public String checkTrackingAccounts() throws Exception {
-
-        List<TrackingEntity> trackingAccountsDetails = trackingAccountsService.getInitializeTrackingAccountsDetails();
-
-        for (TrackingEntity te : trackingAccountsDetails) {
-            logger.info(te.toString());
-        }
-
-        return "";
     }
 
     @RequestMapping(value = "/check-host-gh-tracked", method = RequestMethod.GET)
     public String checkHostTrackedByGrowthHouse(@RequestParam(value = "address") String hostName,
                                                 Model model) throws Exception {
-        List<TrackingEntity> trackingAccountsDetails = trackingAccountsService.getInitializeTrackingAccountsDetails();
+        List<TrackingEntity> trackingAccountsDetails = trackingGHAccountsService.getInitializeTrackingAccountsDetails();
         for (TrackingEntity te : trackingAccountsDetails) {
             logger.info(te.toString());
         }
 
-        List<String> uaCodes = siteMetadataExtractor.getUACodes(hostName);
+        List<String> uaCodes = siteMetadataExtractor.getExtractionReport(hostName).getUaCodes();
 
         List<TrackingEntity> trackedHostGrowthHouseReport = new ArrayList<>();
         if (uaCodes.size() > 0) {
-            trackedHostGrowthHouseReport.addAll(trackingAccountsService.getTrackedHostGrowthHouseReport(uaCodes));
+            trackedHostGrowthHouseReport.addAll(trackingGHAccountsService.getTrackedHostGrowthHouseReport(uaCodes));
         } else
             logger.info(" NO TRACKING CODES extracted for: " + hostName);
 
@@ -104,9 +89,8 @@ public class MainController {
 
 
     @RequestMapping(value = "/check-host-codes", method = RequestMethod.GET)
-    public String checkHostName(
-            @RequestParam(value = "address") String addressToCheck,
-            Model model) throws Exception {
+    public String checkHostName(@RequestParam(value = "address") String addressToCheck,
+                                Model model) throws Exception {
 
         List<String> hostsToCheck = new ArrayList<>();
         if (addressToCheck != null)
@@ -123,7 +107,7 @@ public class MainController {
         for (String hostName : hostsToCheck) {
             logger.info("-- extracting metadata for: " + hostName);
             try {
-                uaCodes.addAll(siteMetadataExtractor.getUACodes(hostName));
+                uaCodes.addAll(siteMetadataExtractor.getExtractionReport(hostName).getUaCodes());
                 checkedOk++;
                 for (String uaCode : uaCodes) {
                     logger.info("extracted UA code:   " + uaCode);
@@ -141,7 +125,6 @@ public class MainController {
         logger.info(" hosts NOT checked successfully : " + checkedBad);
 
         model.addAttribute("hostName", addressToCheck);
-
         model.addAttribute("codesExtracted", uaCodes);
 
         return "host-check";

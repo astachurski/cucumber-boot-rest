@@ -44,8 +44,12 @@
         <th data-align="center" data-field="tracking id" data-sortable="true">tracking id</th>
         <th data-align="center" data-field="property" data-sortable="true">property name</th>
         <th data-align="center" data-field="website" data-sortable="true">website</th>
-        <th data-align="center" data-field="link" data-value-type="url" data-sortable="true">link</th>
-        <th data-align="center" data-field="profiles" data-value-type="list">analytics profiles</th>
+        <th data-align="left" data-field="link" data-value-type="url" data-sortable="true">link</th>
+        <th class="sep-left-cell" data-align="center" data-field="extracted codes" data-value-type="list">host extracted
+            codes
+        </th>
+        <th data-align="center" data-tag="true" data-field="sending #" data-value-type="int">sending GA #</th>
+        <th class="sep-left-cell" data-align="left" data-field="profiles" data-value-type="list">analytics profiles</th>
     </tr>
     </thead>
 
@@ -56,6 +60,8 @@
         <td th:text="${trackingAccount.getPropertyName()}">property name</td>
         <td th:text="${trackingAccount.getWebsite()}">website</td>
         <td th:text="${trackingAccount.getWebsite()}">link</td>
+        <td th:text="${trackingAccount.getWebsiteActualCodes()}">codes</td>
+        <td th:text="${trackingAccount.getSendingGAcodes()}">sending#</td>
         <td th:text="${trackingAccount.getProfiles()}">profiles</td>
     </tr>
 </table>

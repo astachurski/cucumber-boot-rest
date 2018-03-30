@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 
 @Service
 @Scope(scopeName = "singleton")
-public class TrackingAccountsService {
+public class TrackingGHAccountsService {
 
     private final Map<String, TrackingEntity> trackingEntitiesMap = new HashMap<>();
 

@@ -13,22 +13,37 @@ import java.util.regex.Pattern;
 public class SiteMetadataExtractor {
 
     @Autowired
-    RestTemplate restTemplate;
+    private RestTemplate restTemplate;
 
-    public List<String> getUACodes(String hostName) throws Exception {
-        List<String> localResult = new ArrayList<>();
+    public SiteExtractionReport getExtractionReport(String hostName) throws Exception {
+
+        SiteExtractionReport siteExtractionReport = new SiteExtractionReport();
+        List<String> localResultUAcodes = new ArrayList<>();
+        List<String> localResultDoubleSend1 = new ArrayList<>();
         String resp = restTemplate.getForObject(hostName, String.class);
 
         if (resp != null) {
-            Pattern pattern = Pattern.compile("UA-\\d{8}\\d{0,1}-\\d");
-            Matcher matcher = pattern.matcher(resp);
-            while (matcher.find()) {
-                localResult.add(matcher.group().trim());
+            Pattern patternUAcodes = Pattern.compile("UA-\\d{8}\\d{0,1}-\\d");
+            Matcher matcherUAcodes = patternUAcodes.matcher(resp);
+            while (matcherUAcodes.find()) {
+                localResultUAcodes.add(matcherUAcodes.group().trim());
             }
+
+            siteExtractionReport.setUaCodes(localResultUAcodes);
+
+            Pattern patternDoubleSend1 = Pattern.compile("ga\\('send'");
+            Matcher matcherDoubleSend1 = patternDoubleSend1.matcher(resp);
+            while (matcherDoubleSend1.find()) {
+                localResultDoubleSend1.add(matcherDoubleSend1.group().trim());
+            }
+
+            siteExtractionReport.setSendOccurences(localResultDoubleSend1.size());
+
+
         } else {
             System.out.println(" --------------- failed retrieving data for : " + hostName);
         }
-        return localResult;
+        return siteExtractionReport;
     }
 
 }

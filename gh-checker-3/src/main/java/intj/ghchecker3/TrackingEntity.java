@@ -11,8 +11,9 @@ public class TrackingEntity {
     private String trackingId;
     private Boolean growthHouse = false;
     private String website;
-
     private String profiles;
+    private String websiteActualCodes; // from crawling/parsing!
+    private Integer sendingGAcodes;// from crawling/parsing!
 
     TrackingEntity(Long id, String accountName, String propertyName, String trackingId, String website) {
         this.id = id;
@@ -20,6 +21,22 @@ public class TrackingEntity {
         this.propertyName = propertyName;
         this.trackingId = trackingId;
         this.website = website;
+    }
+
+    public void setSendingGAcodes(Integer sendingGAcodes) {
+        this.sendingGAcodes = sendingGAcodes;
+    }
+
+    public Integer getSendingGAcodes() {
+        return sendingGAcodes;
+    }
+
+    public void setWebsiteActualCodes(String websiteActualCodes) {
+        this.websiteActualCodes = websiteActualCodes;
+    }
+
+    public String getWebsiteActualCodes() {
+        return websiteActualCodes;
     }
 
     public void setProfiles(String profiles) {

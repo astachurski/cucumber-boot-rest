@@ -10,7 +10,6 @@ import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.services.analytics.Analytics;
 import com.google.api.services.analytics.AnalyticsScopes;
 import com.google.api.services.analytics.model.*;
-import org.omg.CORBA.INTERNAL;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +38,7 @@ public class GaAccountInspectorService {
     private Analytics analytics;
 
     @Autowired
-    private TrackingAccountsService trackingAccountsService;
+    private TrackingGHAccountsService trackingGHAccountsService;
 
     public static void main(String[] args) throws IOException {
         GaAccountInspectorService gaAccountInspectorService = new GaAccountInspectorService();
@@ -99,7 +98,7 @@ public class GaAccountInspectorService {
                                 webproperty.getId(),
                                 webproperty.getWebsiteUrl());
 
-                Boolean isGhTrackingEntity = trackingAccountsService.isTrackingEntityGrowthHouse(trackingEntity);
+                Boolean isGhTrackingEntity = trackingGHAccountsService.isTrackingEntityGrowthHouse(trackingEntity);
 
                 logger.info(" is tracking entity GrowthHouse ? : " + isGhTrackingEntity);
 
