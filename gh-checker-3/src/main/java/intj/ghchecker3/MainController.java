@@ -1,5 +1,6 @@
 package intj.ghchecker3;
 
+import intj.ghchecker3.persistence.TrackingEntityRepository;
 import intj.ghchecker3.services.GaAccountInspectorService;
 import intj.ghchecker3.services.HostNameService;
 import intj.ghchecker3.services.TrackingGHAccountsService;
@@ -32,6 +33,9 @@ public class MainController {
     @Autowired
     private GaAccountInspectorService gaAccountInspectorService;
 
+    @Autowired
+    private TrackingEntityRepository trackingEntityRepository;
+
 
     @GetMapping(value = "ma-accounts-report")
     public String getAdvisorsAccountOverview(Model model,
@@ -63,6 +67,8 @@ public class MainController {
         }
 
         model.addAttribute("trackingEntities", accountsReports);
+
+        trackingEntityRepository.saveAll(accountsReports);
 
         return "ma-accounts-report";
     }

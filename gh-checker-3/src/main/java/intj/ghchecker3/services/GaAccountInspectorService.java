@@ -92,6 +92,8 @@ public class GaAccountInspectorService {
 
                 logger.info("acuired data on property: " + webproperty.getId() + "/" + webproperty.getWebsiteUrl());
 
+                //tracking entity is the smallest tracking unit - that's why it is created in context of
+                // webproprety (GA property).
                 TrackingEntity trackingEntity =
                         new TrackingEntity(0L,
                                 account.getName(),

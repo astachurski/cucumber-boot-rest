@@ -4,7 +4,14 @@ package intj.ghchecker3;
 //something that is meant to TRACK (as sink) javascript datasources (snippets with UA-codes on remote hosts)
 
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+
+@Entity
 public class TrackingEntity {
+    @Id
+    @GeneratedValue
     private Long id;
     private String accountName;
     private String accountNumber;
@@ -22,6 +29,10 @@ public class TrackingEntity {
         this.propertyName = propertyName;
         this.trackingId = trackingId;
         this.website = website;
+    }
+
+    public TrackingEntity() {
+
     }
 
     public void setAccountNumber(String accountNumber) {
@@ -71,7 +82,6 @@ public class TrackingEntity {
     public String getWebsite() {
         return website;
     }
-
 
 
     public Long getId() {
