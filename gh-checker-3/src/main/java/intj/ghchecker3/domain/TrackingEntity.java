@@ -1,12 +1,17 @@
-package intj.ghchecker3;
+package intj.ghchecker3.domain;
 
 
 //something that is meant to TRACK (as sink) javascript datasources (snippets with UA-codes on remote hosts)
 
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import ch.qos.logback.core.subst.Tokenizer;
+import com.google.common.collect.Lists;
+
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 public class TrackingEntity {
@@ -21,7 +26,15 @@ public class TrackingEntity {
     private String website;
     private String profiles;
     private String websiteActualCodes; // from crawling/parsing!
+
+    @Transient
+    private List<String> websiteActualCodesList = new ArrayList<>();
     private Integer sendingGAcodes;// from crawling/parsing!
+
+/*
+    @OneToMany
+    private List<WebsiteExtractionData> websiteExtractionDataList = new ArrayList<>();
+*/
 
     public TrackingEntity(Long id, String accountName, String propertyName, String trackingId, String website) {
         this.id = id;
@@ -32,6 +45,7 @@ public class TrackingEntity {
     }
 
     public TrackingEntity() {
+
 
     }
 
@@ -57,6 +71,23 @@ public class TrackingEntity {
 
     public String getWebsiteActualCodes() {
         return websiteActualCodes;
+    }
+
+    public void addWebsiteActualCodes(List<String> codes) {
+        this.websiteActualCodesList.addAll(codes);
+    }
+
+    public List<String> getWebsiteActualCodesList() {
+        String[] split = this.websiteActualCodes.split(",");
+
+        List<String> collect = Lists.newArrayList(split).stream().filter(x -> !x.isEmpty()).collect(Collectors.toList());
+        this.websiteActualCodesList.addAll(collect);
+       /* if (split.length > 0){
+            for (String s : split) {
+                this.websiteActualCodesList.add(s);
+            }
+        }*/
+        return websiteActualCodesList;
     }
 
     public void setProfiles(String profiles) {

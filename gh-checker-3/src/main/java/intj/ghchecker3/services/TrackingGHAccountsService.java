@@ -1,6 +1,6 @@
 package intj.ghchecker3.services;
 
-import intj.ghchecker3.TrackingEntity;
+import intj.ghchecker3.domain.TrackingEntity;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 

@@ -1,5 +1,6 @@
-package intj.ghchecker3;
+package intj.ghchecker3.services;
 
+import intj.ghchecker3.domain.SiteExtractionReport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +28,7 @@ public class SiteMetadataExtractor {
         String resp = restTemplate.getForObject(hostName, String.class);
 
         if (resp != null) {
-            Pattern patternUAcodes = Pattern.compile("UA-\\d{8}\\d{0,1}-\\d");
+            Pattern patternUAcodes = Pattern.compile("UA-\\d{6,9}-\\d");
             Matcher matcherUAcodes = patternUAcodes.matcher(resp);
             while (matcherUAcodes.find()) {
                 localResultUAcodes.add(matcherUAcodes.group().trim());
@@ -35,7 +36,7 @@ public class SiteMetadataExtractor {
 
             siteExtractionReport.setUaCodes(localResultUAcodes);
 
-            String patternStr = "ga\\('[a-z]*\\.*send'|__gaTracker\\('send'";
+            String patternStr = "ga\\('[a-z]*\\.*send'|__gaTracker\\('send'|_trackPageview'\\]";
             Pattern patternDoubleSend1 = Pattern.compile(patternStr);
 
 

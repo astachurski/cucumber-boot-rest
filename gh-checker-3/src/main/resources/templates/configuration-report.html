@@ -1,0 +1,69 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Getting Started: Serving Web Content</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <script
+            src="https://code.jquery.com/jquery-1.12.4.js"
+            integrity="sha256-Qw82+bXyGq6MydymqBxNPYTaUXXq7c8v3CwiYwLLNXU="
+            crossorigin="anonymous"></script>
+
+    <script type="text/javascript" src="/js/bootstrap-table.js"></script>
+    <script type="text/javascript" src="/js/Chart.bundle.js"></script>
+    <script type="text/javascript" src="/js/datatable.js"></script>
+    <link rel="stylesheet" href="/css/bootstrap-table.css">
+    <link rel="stylesheet" href="/css/datatable.css">
+
+</head>
+<body>
+
+
+<h5>Configuration report - how websites are actually tracked and by which accounts</h5>
+
+<br>
+
+<br>
+
+<!--manual-->
+<!--https://toni-heittola.github.io/js-datatable/-->
+
+<table class="table datatable"
+       data-pagination="true"
+       data-show-columns="true"
+       data-show-toggle="true"
+       data-striped="false"
+       data-show-chart="false">
+    <thead>
+    <tr>
+        <th data-rank="true">Index</th>
+        <th data-align="center" data-sortable="true" data-field="website">website</th>
+        <th data-tag="true" data-field="account1" data-sortable="true" data-align="center">account #1</th>
+        <th data-tag="true" data-field="account2" data-sortable="true" data-align="center">account #2</th>
+        <!--<th data-tag="true" data-field="account3" data-sortable="true" data-align="center">account #3</th>-->
+    </tr>
+    </thead>
+
+    <tr th:each="matchedConfig : ${matchedConfigs}">
+        <td>idx</td>
+        <td><a href="url" th:href="${matchedConfig.getKey().toString()}" th:text="${matchedConfig.getKey().toString()}">link </a>
+        </td>
+        <td th:text="${matchedConfig.getValue().size() > 0}?${matchedConfig.getValue().get(0).getAccountName()}:'none'">
+            acc
+        </td>
+        <td th:text="${matchedConfig.getValue().size() > 1}?${matchedConfig.getValue().get(1).getAccountName()}:'none'">
+            name
+        </td>
+        <!--<td th:text="${matchedConfig.getValue().size() > 2}?${matchedConfig.getValue().get(2).getAccountName()}:'none'">name</td>-->
+    </tr>
+</table>
+
+
+<br>
+
+
+</body>
+</html>

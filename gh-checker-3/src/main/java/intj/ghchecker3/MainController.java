@@ -1,9 +1,10 @@
 package intj.ghchecker3;
 
+import com.google.api.client.util.Lists;
+import intj.ghchecker3.domain.SiteExtractionReport;
+import intj.ghchecker3.domain.TrackingEntity;
 import intj.ghchecker3.persistence.TrackingEntityRepository;
-import intj.ghchecker3.services.GaAccountInspectorService;
-import intj.ghchecker3.services.HostNameService;
-import intj.ghchecker3.services.TrackingGHAccountsService;
+import intj.ghchecker3.services.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 
 @Controller
@@ -36,6 +38,9 @@ public class MainController {
     @Autowired
     private TrackingEntityRepository trackingEntityRepository;
 
+    @Autowired
+    private ReportGeneratorService reportGeneratorService;
+
 
     @GetMapping(value = "ma-accounts-report")
     public String getAdvisorsAccountOverview(Model model,
@@ -43,35 +48,58 @@ public class MainController {
                                                      required = false,
                                                      defaultValue = "0") Integer limit) {
 
-        List<TrackingEntity> accountsReports = new ArrayList<>();
+        List<TrackingEntity> trackingEntities = new ArrayList<>();
 
         try {
-            accountsReports.addAll(gaAccountInspectorService.getTrackinEntityReport(limit));
+            trackingEntities.addAll(gaAccountInspectorService.getTrackinEntityReport(limit));
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        for (TrackingEntity trackingEntity : accountsReports) {
+        for (TrackingEntity trackingEntity : trackingEntities) {
             try {
                 SiteExtractionReport siteExtractionReport = siteMetadataExtractor.getExtractionReport(trackingEntity.getWebsite());
                 List<String> codes = siteExtractionReport.getUaCodes();
+                trackingEntity.addWebsiteActualCodes(codes);
+
                 StringBuilder sb = new StringBuilder();
-                codes.forEach(code -> sb.append(code + ","));
+                codes.forEach(code -> {
+                    sb.append(code + ",");
+                });
                 trackingEntity.setWebsiteActualCodes(sb.toString());
+
                 trackingEntity.setSendingGAcodes(siteExtractionReport.getSendOccurences());
 
             } catch (Exception e) {
-                trackingEntity.setWebsiteActualCodes("--?--");
+                trackingEntity.setWebsiteActualCodes("");
 
             }
         }
 
-        model.addAttribute("trackingEntities", accountsReports);
+        model.addAttribute("trackingEntities", trackingEntities);
 
-        trackingEntityRepository.saveAll(accountsReports);
+        trackingEntityRepository.saveAll(trackingEntities);
+        reportGeneratorService.setTrackingEntities(trackingEntities);
 
         return "ma-accounts-report";
     }
+
+
+    @GetMapping(value = "get-configuration-report")
+    public String getConfigurationReport(Model model) {
+
+        Iterable<TrackingEntity> trackingEntities = trackingEntityRepository.findAll();
+        reportGeneratorService.setTrackingEntities(Lists.newArrayList(trackingEntities));
+
+        Map<String, List<TrackingEntity>> supportingTrackingEntitiesForHostNames =
+                reportGeneratorService.getSupportingTrackingEntitiesForHostNames();
+
+        model.addAttribute("matchedConfigs", supportingTrackingEntitiesForHostNames);
+
+        return "configuration-report";
+    }
+
+
 
     @GetMapping(value = "get-cached-report")
     public String getCachedReport(Model model) {
@@ -80,7 +108,6 @@ public class MainController {
 
         return "ma-accounts-report";
     }
-
 
 
     @RequestMapping(value = "/check-host-gh-tracked", method = RequestMethod.GET)

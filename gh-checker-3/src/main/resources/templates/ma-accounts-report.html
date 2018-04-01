@@ -32,6 +32,7 @@
 <!--https://toni-heittola.github.io/js-datatable/-->
 
 <table class="table datatable"
+       data-rank-mode="normal"
        data-pagination="true"
        data-show-columns="true"
        data-show-toggle="true"
@@ -39,13 +40,13 @@
        data-show-chart="false">
     <thead>
     <tr>
+        <th data-rank="true">Index</th>
         <th data-align="center" data-tag="true" data-field="name" data-sortable="true">account name</th>
         <th data-align="center" data-field="account-number" data-sortable="true">account #</th>
         <th data-align="center" data-tag="true" data-field="ghAccount" data-sortable="true">growth house account</th>
         <th data-align="center" data-field="tracking id" data-sortable="true">tracking id</th>
         <th data-align="center" data-field="property" data-sortable="true">property name</th>
         <th data-align="center" data-field="website" data-sortable="true">website</th>
-        <th data-align="left" data-field="link" data-value-type="url" data-sortable="true">link</th>
         <th class="sep-left-cell" data-align="center" data-field="extracted codes" data-value-type="list">host extracted
             codes
         </th>
@@ -55,15 +56,16 @@
     </thead>
 
     <tr th:each="trackingAccount : ${trackingEntities}">
+        <td>idx</td>
         <td th:text="${trackingAccount.getAccountName()}">name</td>
-        <td th:text="${trackingAccount.getAccountNumber()}">name</td>
-        <td th:text="${trackingAccount.getGrowthHouse()}">name</td>
+        <td th:text="${trackingAccount.getAccountNumber()}">number</td>
+        <td th:text="${trackingAccount.getGrowthHouse()}">gh</td>
         <td th:text="${trackingAccount.getTrackingId()}">tracking id</td>
         <td th:text="${trackingAccount.getPropertyName()}">property name</td>
-        <td th:text="${trackingAccount.getWebsite()}">website</td>
-        <td th:text="${trackingAccount.getWebsite()}">link</td>
+        <td><a href="url" th:href="${trackingAccount.getWebsite()}" th:text="${trackingAccount.getWebsite()}">link </a>
+        </td>
         <td th:text="${trackingAccount.getWebsiteActualCodes()}">codes</td>
-        <td th:text="${trackingAccount.getSendingGAcodes()}">sending#</td>
+        <td th:text="${trackingAccount.getSendingGAcodes() > 0}?${trackingAccount.getSendingGAcodes()}:''">sending#</td>
         <td th:text="${trackingAccount.getProfiles()}">profiles</td>
     </tr>
 </table>
