@@ -129,9 +129,14 @@ public class GaAccountInspectorService {
 
                         String sessions7daysAgo = profileReports.get("Sessions7daysAgo");
                         String bounces7daysAgo = profileReports.get("Bounces7daysAgo");
+                        String bounceRate7daysAgo = profileReports.get("BounceRate7daysAgo");
+                        String pageviewsPerSession7daysAgo = profileReports.get("PageviewsPerSession7daysAgo");
 
                         trackingEntity.setSessionsLast7days(sessions7daysAgo);
                         trackingEntity.setBouncesLast7days(bounces7daysAgo);
+                        trackingEntity.setBounceRateLast7days(bounceRate7daysAgo);
+                        trackingEntity.setPageviewsPerSessionLast7days(pageviewsPerSession7daysAgo);
+
                         isFirst = false;
                     } else {
                         logger.info("aborting metric collection - there are more views, acquired data for first!");
@@ -159,11 +164,18 @@ public class GaAccountInspectorService {
 
             GaData gaSessionsData = getGaSessions(analytics, profileId);
             GaData gaBouncesData = getGaBounces(analytics, profileId);
+            GaData gaBounceRateData = getGaBounceRate(analytics, profileId);
+            GaData gaPageviewsPerSessionData = getGaPageViewsPerSession(analytics, profileId);
 
             String metricName = "Sessions7daysAgo";
             resultReports.put(metricName, formatGaResults(gaSessionsData, metricName));
             metricName = "Bounces7daysAgo";
             resultReports.put(metricName, formatGaResults(gaBouncesData, metricName));
+            metricName = "BounceRate7daysAgo";
+            resultReports.put(metricName, formatGaResults(gaBounceRateData, metricName));
+            metricName = "PageviewsPerSession7daysAgo";
+            resultReports.put(metricName, formatGaResults(gaPageviewsPerSessionData, metricName));
+
 
         } catch (IOException e) {
             logger.info(" could not obtain GA metrics for view  " + profile.getName());
@@ -176,15 +188,31 @@ public class GaAccountInspectorService {
         // Query the Core Reporting API for the number of sessions
         // in the past seven days.
         return analytics.data().ga()
-                .get("ga:" + profileId, "7daysAgo", "today", "ga:sessions")
+                .get("ga:" + profileId, "7daysAgo", "yesterday", "ga:sessions")
                 .execute();
     }
 
     private GaData getGaBounces(Analytics analytics, String profileId) throws IOException {
         return analytics.data().ga()
-                .get("ga:" + profileId, "7daysAgo", "today", "ga:bounces")
+                .get("ga:" + profileId, "7daysAgo", "yesterday", "ga:bounces")
                 .execute();
     }
+
+    private GaData getGaBounceRate(Analytics analytics, String profileId) throws IOException {
+        return analytics.data().ga()
+                .get("ga:" + profileId, "7daysAgo", "yesterday", "ga:bounceRate")
+                .execute();
+    }
+
+    private GaData getGaPageViewsPerSession(Analytics analytics, String profileId) throws IOException {
+        return analytics.data().ga()
+                .get("ga:" + profileId, "7daysAgo", "yesterday", "ga:pageviewsPerSession")
+                .execute();
+    }
+
+
+
+
 
     private String formatGaResults(GaData results, String metricName) {
         // Parse the response from the Core Reporting API for

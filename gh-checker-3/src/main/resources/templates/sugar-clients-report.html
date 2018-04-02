@@ -49,29 +49,18 @@
         <th data-align="center" data-field="advisor" data-sortable="true">advisor assigned</th>
         <th data-align="center" data-field="gh-clients" data-sortable="true">advisor's clients</th>
         <th data-align="center" data-field="gh-client-dashboard" data-sortable="true">dashboard</th>
-
     </tr>
     </thead>
 
     <tr th:each="ghClient : ${ghClients}">
         <td>idx</td>
-
         <td th:text="${ghClient.getName()}"></td>
-
         <td><a href="url" th:href="${ghClient.getWebsite()}" th:text="${ghClient.getWebsite()}">link </a></td>
-
         <td th:text="${ghClient.getClientId()}"></td>
-
         <td><a href="url" th:href="${sugarLink} + ${ghClient.getClientId()}" th:text="sugar">link</a></td>
-
-
         <td th:text="${ghClient.getAdvisorId()}"></td>
-
         <td><a href="url" th:href="${ghCustomerOverview} + ${ghClient.getAdvisorId()}" th:text="overview">link</a></td>
-
         <td><a href="url" th:href="${ghClientDashboard} + ${ghClient.getClientId()}" th:text="dashboard">link</a></td>
-
-
     </tr>
 </table>
 <!--http://growth-house.idium.no/customer-overview/80bb8083-ed53-acfe-69da-507fa15df8df-->

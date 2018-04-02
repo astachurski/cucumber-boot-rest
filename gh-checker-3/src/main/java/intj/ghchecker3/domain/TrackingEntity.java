@@ -26,8 +26,11 @@ public class TrackingEntity {
 
     private String websiteActualCodes; // from crawling/parsing!
 
+    //metrics read from GA for comparisons across accounts and with GH
     private String sessionsLast7days;
     private String bouncesLast7days;
+    private String bounceRateLast7days;
+    private String pageviewsPerSessionLast7days;
 
     @Transient
     private List<String> websiteActualCodesList = new ArrayList<>();
@@ -49,6 +52,22 @@ public class TrackingEntity {
     public TrackingEntity() {
 
 
+    }
+
+    public String getBounceRateLast7days() {
+        return bounceRateLast7days;
+    }
+
+    public void setBounceRateLast7days(String bounceRateLast7days) {
+        this.bounceRateLast7days = bounceRateLast7days;
+    }
+
+    public String getPageviewsPerSessionLast7days() {
+        return pageviewsPerSessionLast7days;
+    }
+
+    public void setPageviewsPerSessionLast7days(String pageviewsPerSessionLast7days) {
+        this.pageviewsPerSessionLast7days = pageviewsPerSessionLast7days;
     }
 
     public String getSessionsLast7days() {

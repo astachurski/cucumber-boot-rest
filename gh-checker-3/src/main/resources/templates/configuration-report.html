@@ -44,14 +44,26 @@
         <th data-rank="true">Index</th>
         <th data-align="center" data-sortable="true" data-field="website">website</th>
 
-        <th data-tag="true" data-field="account1" data-sortable="true" data-align="center">account #1</th>
-        <th data-field="bouncesLast7days1" data-sortable="true" data-align="center">bouncesLast7days</th>
-        <th data-field="sessionsLast7days1" data-sortable="true" data-align="center">sessionsLast7days</th>
+        <th data-tag="true" data-field="account1" data-sortable="true" data-align="center">GA account #1</th>
+        <!--
+                <th data-field="bouncesLast7days1" data-sortable="true" data-align="center">bouncesLast7days</th>
+                <th data-field="sessionsLast7days1" data-sortable="true" data-align="center">sessionsLast7days</th>
+        -->
+        <th data-field="bounceRateLast7days1" data-sortable="true" data-align="center">bounceRateLast7days1</th>
+        <th data-field="pageViewsPerSessionLast7days1" data-sortable="true" data-align="center">
+            pageViewsPerSessionLast7days1
+        </th>
 
 
-        <th data-tag="true" data-field="account2" data-sortable="true" data-align="center">account #2</th>
-        <th data-field="bouncesLast7days2" data-sortable="true" data-align="center">bouncesLast7days</th>
-        <th data-field="sessionsLast7days2" data-sortable="true" data-align="center">sessionsLast7days</th>
+        <th data-tag="true" data-field="account2" data-sortable="true" data-align="center">GA account #2</th>
+        <!--
+                <th data-field="bouncesLast7days2" data-sortable="true" data-align="center">bouncesLast7days</th>
+                <th data-field="sessionsLast7days2" data-sortable="true" data-align="center">sessionsLast7days</th>
+        -->
+        <th data-field="bounceRateLast7days2" data-sortable="true" data-align="center">bounceRateLast7days2</th>
+        <th data-field="pageViewsPerSessionLast7days2" data-sortable="true" data-align="center">
+            pageViewsPerSessionLast7days2
+        </th>
 
 
         <!--<th data-tag="true" data-field="account3" data-sortable="true" data-align="center">account #3</th>-->
@@ -66,11 +78,13 @@
         <td th:text="${matchedConfig.getValue().size() > 0}?${matchedConfig.getValue().get(0).getAccountName() + '  ' + matchedConfig.getValue().get(0).getTrackingId()}:'none'">
             acc
         </td>
-        <td th:text="${matchedConfig.getValue().size() > 0}?${matchedConfig.getValue().get(0).getBouncesLast7days()}:'no data'">
-            bounces
+        <!--        <td th:text="${matchedConfig.getValue().size() > 0}?${matchedConfig.getValue().get(0).getBouncesLast7days()}:'no data'">bounces</td>
+                <td th:text="${matchedConfig.getValue().size() > 0}?${matchedConfig.getValue().get(0).getSessionsLast7days()}:'no data'">sessions</td>-->
+        <td th:text="${matchedConfig.getValue().size() > 0}?${matchedConfig.getValue().get(0).getBounceRateLast7days()}:'no data'">
+            bounceRate
         </td>
-        <td th:text="${matchedConfig.getValue().size() > 0}?${matchedConfig.getValue().get(0).getSessionsLast7days()}:'no data'">
-            sessions
+        <td th:text="${matchedConfig.getValue().size() > 0}?${matchedConfig.getValue().get(0).getPageviewsPerSessionLast7days()}:'no data'">
+            pps
         </td>
 
 
@@ -78,12 +92,18 @@
         <td th:text="${matchedConfig.getValue().size() > 1}?${matchedConfig.getValue().get(1).getAccountName() + '  ' + matchedConfig.getValue().get(1).getTrackingId()}:'none'">
             acc
         </td>
-        <td th:text="${matchedConfig.getValue().size() > 1}?${matchedConfig.getValue().get(1).getBouncesLast7days()}:'no data'">
-            bounces
+        <!--
+                <td th:text="${matchedConfig.getValue().size() > 1}?${matchedConfig.getValue().get(1).getBouncesLast7days()}:'no data'">bounces</td>
+                <td th:text="${matchedConfig.getValue().size() > 1}?${matchedConfig.getValue().get(1).getSessionsLast7days()}:'no data'">sessions</td>
+        -->
+
+        <td th:text="${matchedConfig.getValue().size() > 1}?${matchedConfig.getValue().get(1).getBounceRateLast7days()}:'no data'">
+            bounceRate
         </td>
-        <td th:text="${matchedConfig.getValue().size() > 1}?${matchedConfig.getValue().get(1).getSessionsLast7days()}:'no data'">
-            sessions
+        <td th:text="${matchedConfig.getValue().size() > 1}?${matchedConfig.getValue().get(1).getPageviewsPerSessionLast7days()}:'no data'">
+            pps
         </td>
+
 
         <!--<td th:text="${matchedConfig.getValue().size() > 2}?${matchedConfig.getValue().get(2).getAccountName()}:'none'">name</td>-->
     </tr>
