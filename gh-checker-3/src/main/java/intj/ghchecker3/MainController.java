@@ -124,6 +124,9 @@ public class MainController {
 
         model.addAttribute("ghClients", ghClients);
 
+        model.addAttribute("ghCustomerOverview", "http://growth-house.idium.no/customer-overview/");
+        model.addAttribute("ghClientDashboard", "http://growth-house.idium.no/dashboard/");
+
         return "sugar-clients-report";
     }
 
