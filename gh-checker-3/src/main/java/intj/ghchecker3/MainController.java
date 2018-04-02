@@ -1,5 +1,6 @@
 package intj.ghchecker3;
 
+import ch.qos.logback.core.net.server.Client;
 import com.google.api.client.util.Lists;
 import intj.ghchecker3.domain.ClientGHSugar;
 import intj.ghchecker3.domain.SiteExtractionReport;
@@ -7,6 +8,7 @@ import intj.ghchecker3.domain.TrackingEntity;
 import intj.ghchecker3.persistence.ClientGHSugarRepository;
 import intj.ghchecker3.persistence.TrackingEntityRepository;
 import intj.ghchecker3.services.*;
+import org.javatuples.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,9 +17,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 @Controller
@@ -108,8 +108,44 @@ public class MainController {
         Map<String, List<TrackingEntity>> supportingTrackingEntitiesForHostNames =
                 reportGeneratorService.getSupportingTrackingEntitiesForHostNames();
 
+
+        Map<String, List<TrackingEntity>> supportingTrackingEntitiesForHostNames_filtered = new HashMap<>();
+
+        //get the really supported clients not just by account only - we assume 2 tracking accounts max
+        supportingTrackingEntitiesForHostNames.forEach((key, value) -> {
+            if (value.size() == 2)
+                supportingTrackingEntitiesForHostNames_filtered.put(key, value);
+        });
+
+        Map<String, Pair<List<TrackingEntity>, ClientGHSugar>> trackingAccountsWithGhClientDashboard = new HashMap<>();
+
+        /*List<ClientGHSugar> foundSugarClients = new ArrayList<>();*/
+
+        Set<Map.Entry<String, List<TrackingEntity>>> entries = supportingTrackingEntitiesForHostNames_filtered.entrySet();
+        for (Map.Entry<String, List<TrackingEntity>> entry : entries) {
+            String key = entry.getKey();
+            List<TrackingEntity> trackingEntitiesList = entry.getValue();
+            ClientGHSugar foundClient = null;
+            for (TrackingEntity trackingEntity : trackingEntitiesList) {
+                foundClient = clientGHSugarRepository.findByName(trackingEntity.getAccountName());
+                if (foundClient != null) {
+                    break;
+                }
+            }
+            trackingAccountsWithGhClientDashboard.put(key, Pair.with(trackingEntitiesList, foundClient));
+        }
+
+
+        //model.addAttribute("foundClients", foundSugarClients);
+
         model.addAttribute("idiumSugarClientsCount", ghClients.size());
-        model.addAttribute("matchedConfigs", supportingTrackingEntitiesForHostNames);
+        //model.addAttribute("matchedConfigs", supportingTrackingEntitiesForHostNames);
+        model.addAttribute("matchedConfigs", supportingTrackingEntitiesForHostNames_filtered);
+
+        model.addAttribute("matchedConfigsWithGh", trackingAccountsWithGhClientDashboard);
+
+
+        model.addAttribute("ghClientDashboard", "http://growth-house.idium.no/dashboard/");
 
         return "configuration-report";
     }

@@ -65,47 +65,49 @@
             pageViewsPerSessionLast7days2
         </th>
 
+        <th data-align="center" data-sortable="true" data-field="gh-dashboard">gh dashboard</th>
 
         <!--<th data-tag="true" data-field="account3" data-sortable="true" data-align="center">account #3</th>-->
     </tr>
     </thead>
 
-    <tr th:each="matchedConfig : ${matchedConfigs}">
+    <!--<tr th:each="matchedConfig : ${matchedConfigs}">-->
+    <tr th:each="matchedConfig : ${matchedConfigsWithGh}">
         <td>idx</td>
+
         <td><a href="url" th:href="${matchedConfig.getKey().toString()}" th:text="${matchedConfig.getKey().toString()}">link</a>
         </td>
 
-        <td th:text="${matchedConfig.getValue().size() > 0}?${matchedConfig.getValue().get(0).getAccountName() + '  ' + matchedConfig.getValue().get(0).getTrackingId()}:'none'">
+        <!--<td th:text="${matchedConfig.getValue().size() > 0}?${matchedConfig.getValue().get(0).getAccountName() + '  ' + matchedConfig.getValue().get(0).getTrackingId()}:'none'">acc</td>-->
+        <td th:text="${matchedConfig.getValue().getValue0().size() > 0}?${matchedConfig.getValue().getValue0().get(0).getAccountName() + '  ' + matchedConfig.getValue().getValue0().get(0).getTrackingId()}:'none'">
             acc
         </td>
-        <!--        <td th:text="${matchedConfig.getValue().size() > 0}?${matchedConfig.getValue().get(0).getBouncesLast7days()}:'no data'">bounces</td>
-                <td th:text="${matchedConfig.getValue().size() > 0}?${matchedConfig.getValue().get(0).getSessionsLast7days()}:'no data'">sessions</td>-->
-        <td th:text="${matchedConfig.getValue().size() > 0}?${matchedConfig.getValue().get(0).getBounceRateLast7days()}:'no data'">
+
+
+        <td th:text="${matchedConfig.getValue().getValue0().size() > 0}?${matchedConfig.getValue().getValue0().get(0).getBounceRateLast7days()}:'no data'">
             bounceRate
         </td>
-        <td th:text="${matchedConfig.getValue().size() > 0}?${matchedConfig.getValue().get(0).getPageviewsPerSessionLast7days()}:'no data'">
+        <td th:text="${matchedConfig.getValue().getValue0().size() > 0}?${matchedConfig.getValue().getValue0().get(0).getPageviewsPerSessionLast7days()}:'no data'">
             pps
         </td>
 
 
-        <!--<td th:text="${matchedConfig.getValue().size() > 1}?${matchedConfig.getValue().get(1).getAccountName()}:'none'">name </td>-->
-        <td th:text="${matchedConfig.getValue().size() > 1}?${matchedConfig.getValue().get(1).getAccountName() + '  ' + matchedConfig.getValue().get(1).getTrackingId()}:'none'">
+        <td th:text="${matchedConfig.getValue().getValue0().size() > 1}?${matchedConfig.getValue().getValue0().get(1).getAccountName() + '  ' + matchedConfig.getValue().getValue0().get(1).getTrackingId()}:'none'">
             acc
         </td>
-        <!--
-                <td th:text="${matchedConfig.getValue().size() > 1}?${matchedConfig.getValue().get(1).getBouncesLast7days()}:'no data'">bounces</td>
-                <td th:text="${matchedConfig.getValue().size() > 1}?${matchedConfig.getValue().get(1).getSessionsLast7days()}:'no data'">sessions</td>
-        -->
 
-        <td th:text="${matchedConfig.getValue().size() > 1}?${matchedConfig.getValue().get(1).getBounceRateLast7days()}:'no data'">
+        <td th:text="${matchedConfig.getValue().getValue0().size() > 1}?${matchedConfig.getValue().getValue0().get(1).getBounceRateLast7days()}:'no data'">
             bounceRate
         </td>
-        <td th:text="${matchedConfig.getValue().size() > 1}?${matchedConfig.getValue().get(1).getPageviewsPerSessionLast7days()}:'no data'">
+        <td th:text="${matchedConfig.getValue().getValue0().size() > 1}?${matchedConfig.getValue().getValue0().get(1).getPageviewsPerSessionLast7days()}:'no data'">
             pps
         </td>
 
+        <!--<td><a href="url" th:href="${ghClientDashboard} + ${matchedConfig.getValue().getValue1().getClientId()}" th:text="dashboard">link</a></td>-->
+        <td><a href="url"
+               th:href="${matchedConfig.getValue().getValue1()!= null}? ${ghClientDashboard}+${matchedConfig.getValue().getValue1().getClientId()}:'none'"
+               th:text="dashboard">gh dashboard</a></td>
 
-        <!--<td th:text="${matchedConfig.getValue().size() > 2}?${matchedConfig.getValue().get(2).getAccountName()}:'none'">name</td>-->
     </tr>
 </table>
 
