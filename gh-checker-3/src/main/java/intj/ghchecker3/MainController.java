@@ -121,11 +121,10 @@ public class MainController {
         List<ClientGHSugar> ghClients = initLoadClientTable();
 
         model.addAttribute("idiumSugarClientsCount", ghClients.size());
-
         model.addAttribute("ghClients", ghClients);
-
         model.addAttribute("ghCustomerOverview", "http://growth-house.idium.no/customer-overview/");
         model.addAttribute("ghClientDashboard", "http://growth-house.idium.no/dashboard/");
+        model.addAttribute("sugarLink", "https://crm.idium.no/index.php?module=Accounts&action=DetailView&record=");
 
         return "sugar-clients-report";
     }
