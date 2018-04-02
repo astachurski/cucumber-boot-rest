@@ -1,0 +1,64 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Getting Started: Serving Web Content</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <script
+            src="https://code.jquery.com/jquery-1.12.4.js"
+            integrity="sha256-Qw82+bXyGq6MydymqBxNPYTaUXXq7c8v3CwiYwLLNXU="
+            crossorigin="anonymous"></script>
+
+    <script type="text/javascript" src="/js/bootstrap-table.js"></script>
+    <script type="text/javascript" src="/js/Chart.bundle.js"></script>
+    <script type="text/javascript" src="/js/datatable.js"></script>
+    <link rel="stylesheet" href="/css/bootstrap-table.css">
+    <link rel="stylesheet" href="/css/datatable.css">
+
+</head>
+<body>
+
+
+<h5>Client definitions as loaded from Dynamo "Sugar" table </h5>
+
+<br>
+
+<h2 th:text="'Idium clients from Sugar CRM:' + ${idiumSugarClientsCount}">clients count</h2>
+
+<br>
+
+<!--manual-->
+<!--https://toni-heittola.github.io/js-datatable/-->
+
+<table class="table datatable"
+       data-pagination="true"
+       data-show-columns="true"
+       data-show-toggle="true"
+       data-striped="false"
+       data-show-chart="false">
+    <thead>
+    <tr>
+        <th data-rank="true">Index</th>
+        <th data-align="center" data-sortable="true" data-field="name">name</th>
+        <th data-align="center" data-field="website" data-sortable="true">website</th>
+    </tr>
+    </thead>
+
+    <tr th:each="ghClient : ${ghClients}">
+        <td>idx</td>
+        <td th:text="${ghClient.getName()}"></td>
+        <td><a href="url" th:href="${ghClient.getWebsite()}" th:text="${ghClient.getWebsite()}">link </a>
+        </td>
+
+    </tr>
+</table>
+
+
+<br>
+
+
+</body>
+</html>

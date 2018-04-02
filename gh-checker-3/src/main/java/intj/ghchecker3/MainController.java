@@ -1,8 +1,10 @@
 package intj.ghchecker3;
 
 import com.google.api.client.util.Lists;
+import intj.ghchecker3.domain.ClientGHSugar;
 import intj.ghchecker3.domain.SiteExtractionReport;
 import intj.ghchecker3.domain.TrackingEntity;
+import intj.ghchecker3.persistence.ClientGHSugarRepository;
 import intj.ghchecker3.persistence.TrackingEntityRepository;
 import intj.ghchecker3.services.*;
 import org.slf4j.Logger;
@@ -24,6 +26,9 @@ public class MainController {
     private static Logger logger = LoggerFactory.getLogger("MainController");
 
     @Autowired
+    private DynamoDBclientDataExtractor dynamoDBclientDataExtractor;
+
+    @Autowired
     private TrackingGHAccountsService trackingGHAccountsService;
 
     @Autowired
@@ -37,6 +42,9 @@ public class MainController {
 
     @Autowired
     private TrackingEntityRepository trackingEntityRepository;
+
+    @Autowired
+    private ClientGHSugarRepository clientGHSugarRepository;
 
     @Autowired
     private ReportGeneratorService reportGeneratorService;
@@ -92,6 +100,7 @@ public class MainController {
 
     @GetMapping(value = "get-configuration-report")
     public String getConfigurationReport(Model model) {
+        List<ClientGHSugar> ghClients = initLoadClientTable();
 
         Iterable<TrackingEntity> trackingEntities = trackingEntityRepository.findAll();
         reportGeneratorService.setTrackingEntities(Lists.newArrayList(trackingEntities));
@@ -99,18 +108,29 @@ public class MainController {
         Map<String, List<TrackingEntity>> supportingTrackingEntitiesForHostNames =
                 reportGeneratorService.getSupportingTrackingEntitiesForHostNames();
 
+        model.addAttribute("idiumSugarClientsCount", ghClients.size());
         model.addAttribute("matchedConfigs", supportingTrackingEntitiesForHostNames);
 
         return "configuration-report";
     }
 
 
+    @GetMapping(value = "get-clients-report")
+    public String getSugarClientsReport(Model model) {
+
+        List<ClientGHSugar> ghClients = initLoadClientTable();
+
+        model.addAttribute("idiumSugarClientsCount", ghClients.size());
+
+        model.addAttribute("ghClients", ghClients);
+
+        return "sugar-clients-report";
+    }
+
 
     @GetMapping(value = "get-cached-report")
     public String getCachedReport(Model model) {
-
         model.addAttribute("trackingEntities", trackingEntityRepository.findAll());
-
         return "ma-accounts-report";
     }
 
@@ -163,4 +183,23 @@ public class MainController {
 
         return "host-check";
     }
+
+    private List<ClientGHSugar> initLoadClientTable() {
+        List<ClientGHSugar> ghClients;
+
+        if (clientGHSugarRepository.count() == 0) {
+            logger.info("no sugar clients in database yet. Reading and caching...");
+            ghClients = dynamoDBclientDataExtractor.getClientSugarData();
+            clientGHSugarRepository.saveAll(ghClients);
+            logger.info("GrowthHouse clients cached in database : " + ghClients.size() + " entries.");
+        } else {
+            logger.info("restoring client data from database...");
+            Iterable<ClientGHSugar> ghSugarRepositoryAll = clientGHSugarRepository.findAll();
+            ghClients = new ArrayList<>();
+            ghSugarRepositoryAll.iterator().forEachRemaining(client -> ghClients.add(client));
+            logger.info("restored from local database: " + ghClients.size() + " entries");
+        }
+        return ghClients;
+    }
+
 }
