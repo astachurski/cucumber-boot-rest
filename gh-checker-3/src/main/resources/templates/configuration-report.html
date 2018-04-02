@@ -41,22 +41,48 @@
     <tr>
         <th data-rank="true">Index</th>
         <th data-align="center" data-sortable="true" data-field="website">website</th>
+
         <th data-tag="true" data-field="account1" data-sortable="true" data-align="center">account #1</th>
+        <th data-field="bouncesLast7days1" data-sortable="true" data-align="center">bouncesLast7days</th>
+        <th data-field="sessionsLast7days1" data-sortable="true" data-align="center">sessionsLast7days</th>
+
+
         <th data-tag="true" data-field="account2" data-sortable="true" data-align="center">account #2</th>
+        <th data-field="bouncesLast7days2" data-sortable="true" data-align="center">bouncesLast7days</th>
+        <th data-field="sessionsLast7days2" data-sortable="true" data-align="center">sessionsLast7days</th>
+
+
         <!--<th data-tag="true" data-field="account3" data-sortable="true" data-align="center">account #3</th>-->
     </tr>
     </thead>
 
     <tr th:each="matchedConfig : ${matchedConfigs}">
         <td>idx</td>
-        <td><a href="url" th:href="${matchedConfig.getKey().toString()}" th:text="${matchedConfig.getKey().toString()}">link </a>
+        <td><a href="url" th:href="${matchedConfig.getKey().toString()}" th:text="${matchedConfig.getKey().toString()}">link</a>
         </td>
-        <td th:text="${matchedConfig.getValue().size() > 0}?${matchedConfig.getValue().get(0).getAccountName()}:'none'">
+
+        <td th:text="${matchedConfig.getValue().size() > 0}?${matchedConfig.getValue().get(0).getAccountName() + '  ' + matchedConfig.getValue().get(0).getTrackingId()}:'none'">
             acc
         </td>
-        <td th:text="${matchedConfig.getValue().size() > 1}?${matchedConfig.getValue().get(1).getAccountName()}:'none'">
-            name
+        <td th:text="${matchedConfig.getValue().size() > 0}?${matchedConfig.getValue().get(0).getBouncesLast7days()}:'no data'">
+            bounces
         </td>
+        <td th:text="${matchedConfig.getValue().size() > 0}?${matchedConfig.getValue().get(0).getSessionsLast7days()}:'no data'">
+            sessions
+        </td>
+
+
+        <!--<td th:text="${matchedConfig.getValue().size() > 1}?${matchedConfig.getValue().get(1).getAccountName()}:'none'">name </td>-->
+        <td th:text="${matchedConfig.getValue().size() > 1}?${matchedConfig.getValue().get(1).getAccountName() + '  ' + matchedConfig.getValue().get(1).getTrackingId()}:'none'">
+            acc
+        </td>
+        <td th:text="${matchedConfig.getValue().size() > 1}?${matchedConfig.getValue().get(1).getBouncesLast7days()}:'no data'">
+            bounces
+        </td>
+        <td th:text="${matchedConfig.getValue().size() > 1}?${matchedConfig.getValue().get(1).getSessionsLast7days()}:'no data'">
+            sessions
+        </td>
+
         <!--<td th:text="${matchedConfig.getValue().size() > 2}?${matchedConfig.getValue().get(2).getAccountName()}:'none'">name</td>-->
     </tr>
 </table>

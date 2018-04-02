@@ -46,7 +46,9 @@ public class MainController {
     public String getAdvisorsAccountOverview(Model model,
                                              @RequestParam(value = "limit",
                                                      required = false,
-                                                     defaultValue = "0") Integer limit) {
+                                                     defaultValue = "0") Integer limit,
+                                             @RequestParam(value = "replace",
+                                                     required = true) Boolean replace) {
 
         List<TrackingEntity> trackingEntities = new ArrayList<>();
 
@@ -78,7 +80,10 @@ public class MainController {
 
         model.addAttribute("trackingEntities", trackingEntities);
 
-        trackingEntityRepository.saveAll(trackingEntities);
+        if (replace) {
+            trackingEntityRepository.deleteAll();
+            trackingEntityRepository.saveAll(trackingEntities);
+        }
         reportGeneratorService.setTrackingEntities(trackingEntities);
 
         return "ma-accounts-report";

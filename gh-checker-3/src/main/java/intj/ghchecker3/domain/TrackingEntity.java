@@ -4,12 +4,10 @@ package intj.ghchecker3.domain;
 //something that is meant to TRACK (as sink) javascript datasources (snippets with UA-codes on remote hosts)
 
 
-import ch.qos.logback.core.subst.Tokenizer;
 import com.google.common.collect.Lists;
 
 import javax.persistence.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,8 +22,12 @@ public class TrackingEntity {
     private String trackingId;
     private Boolean growthHouse = false;
     private String website;
-    private String profiles;
+    private String viewNames;
+
     private String websiteActualCodes; // from crawling/parsing!
+
+    private String sessionsLast7days;
+    private String bouncesLast7days;
 
     @Transient
     private List<String> websiteActualCodesList = new ArrayList<>();
@@ -47,6 +49,22 @@ public class TrackingEntity {
     public TrackingEntity() {
 
 
+    }
+
+    public String getSessionsLast7days() {
+        return sessionsLast7days;
+    }
+
+    public void setSessionsLast7days(String sessionsLast7days) {
+        this.sessionsLast7days = sessionsLast7days;
+    }
+
+    public String getBouncesLast7days() {
+        return bouncesLast7days;
+    }
+
+    public void setBouncesLast7days(String bouncesLast7days) {
+        this.bouncesLast7days = bouncesLast7days;
     }
 
     public void setAccountNumber(String accountNumber) {
@@ -90,12 +108,12 @@ public class TrackingEntity {
         return websiteActualCodesList;
     }
 
-    public void setProfiles(String profiles) {
-        this.profiles = profiles;
+    public void setViewNames(String profiles) {
+        this.viewNames = profiles;
     }
 
-    public String getProfiles() {
-        return profiles;
+    public String getViewNames() {
+        return viewNames;
     }
 
     public void setGrowthHouse(Boolean growthHouse) {

@@ -21,7 +21,9 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * A simple example of how to access the Google Analytics API using a service
@@ -33,6 +35,7 @@ public class GaAccountInspectorService {
     private static final String APPLICATION_NAME = "psychic-empire-199114";
     private static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
     private static final String KEY_FILE_LOCATION = "/home/adrian/Development/SDA/Spring/gh-checker-3/src/main/resources/client_secrets.json";
+    //private static final String KEY_FILE_LOCATION = "/home/adrian/Development/SDA/Spring/gh-checker-3/src/main/resources/client_secrets-2.json";
 
     private static Logger logger = LoggerFactory.getLogger("GaAccountInspectorService");
 
@@ -87,7 +90,7 @@ public class GaAccountInspectorService {
             Webproperties properties = analytics.management().webproperties()
                     .list(account.getId()).execute();
 
-            // traversing properties/applications
+            // ------------- traversing properties/applications
             for (Webproperty webproperty : properties.getItems()) {
 
                 logger.info("acuired data on property: " + webproperty.getId() + "/" + webproperty.getWebsiteUrl());
@@ -110,16 +113,33 @@ public class GaAccountInspectorService {
                 Profiles profiles = analytics.management().profiles()
                         .list(account.getId(), webproperty.getId()).execute();
 
+                if (profiles.getItems().size() > 1)
+                    logger.info(" This account has MORE THAN DEFAULT view!");
+
+
                 // traversing views/profiles for property/application
 
                 StringBuilder sb = new StringBuilder();
+                boolean isFirst = true; // we gather analytics data from FIRST view only, but names from all
                 for (Profile profile : profiles.getItems()) {
                     sb.append(profile.getName() + ",");
-                    logger.info("VIEW found: " + profile.getName());
-                    //getProfileReports(profile, analytics);
+                    if (isFirst) {
+                        logger.info("VIEW found: " + profile.getName());
+                        Map<String, String> profileReports = getProfileReports(profile, analytics);
+
+                        String sessions7daysAgo = profileReports.get("Sessions7daysAgo");
+                        String bounces7daysAgo = profileReports.get("Bounces7daysAgo");
+
+                        trackingEntity.setSessionsLast7days(sessions7daysAgo);
+                        trackingEntity.setBouncesLast7days(bounces7daysAgo);
+                        isFirst = false;
+                    } else {
+                        logger.info("aborting metric collection - there are more views, acquired data for first!");
+                    }
+
                 }
 
-                trackingEntity.setProfiles(sb.toString());
+                trackingEntity.setViewNames(sb.toString());
                 trackingEntitiesReports.add(trackingEntity);
             }
 
@@ -130,40 +150,27 @@ public class GaAccountInspectorService {
         return trackingEntitiesReports;
     }
 
-    private List<String> getPropertyReport(Webproperty webproperty, Analytics analytics) {
-        List<String> resultReports = new ArrayList<>();
-
-        System.out.println("website reported: " + webproperty.getWebsiteUrl());
-
-        return resultReports;
-
-    }
-
-    private List<String> getProfileReports(Profile profile, Analytics analytics) {
-
-        List<String> resultReports = new ArrayList<>();
+    private Map<String, String> getProfileReports(Profile profile, Analytics analytics) {
+        Map<String, String> resultReports = new HashMap<>();
 
         try {
 
-            // Return the first (view) profile associated with the property.
             String profileId = profile.getId();
-            System.out.println("  view id: " + profileId);
 
             GaData gaSessionsData = getGaSessions(analytics, profileId);
             GaData gaBouncesData = getGaBounces(analytics, profileId);
 
-            resultReports.add(formatGaResults(gaSessionsData, "Sessions7daysAgo"));
-            resultReports.add(formatGaResults(gaBouncesData, "Bounces7daysAgo"));
+            String metricName = "Sessions7daysAgo";
+            resultReports.put(metricName, formatGaResults(gaSessionsData, metricName));
+            metricName = "Bounces7daysAgo";
+            resultReports.put(metricName, formatGaResults(gaBouncesData, metricName));
 
-            System.out.println("------------------------------------");
         } catch (IOException e) {
-            System.out.printf("----- IO exception !!! -----");
+            logger.info(" could not obtain GA metrics for view  " + profile.getName());
         }
 
         return resultReports;
-
     }
-
 
     private GaData getGaSessions(Analytics analytics, String profileId) throws IOException {
         // Query the Core Reporting API for the number of sessions
@@ -184,9 +191,9 @@ public class GaAccountInspectorService {
         // the profile name and number of sessions.
         String result = "";
         if (results != null && results.getRows() != null) {
-            result = metricName + " : " + results.getRows().get(0).get(0);
+            result = results.getRows().get(0).get(0);
         } else {
-            System.out.println("No results found for: " + metricName);
+            logger.info("No results found for: " + metricName);
         }
 
         return result;
