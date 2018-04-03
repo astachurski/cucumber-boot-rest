@@ -8,6 +8,7 @@ import intj.ghchecker3.domain.TrackingEntity;
 import intj.ghchecker3.persistence.ClientGHSugarRepository;
 import intj.ghchecker3.persistence.TrackingEntityRepository;
 import intj.ghchecker3.services.*;
+import intj.ghchecker3.tools.HttpReformatter;
 import org.javatuples.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -127,7 +128,14 @@ public class MainController {
             List<TrackingEntity> trackingEntitiesList = entry.getValue();
             ClientGHSugar foundClient = null;
             for (TrackingEntity trackingEntity : trackingEntitiesList) {
-                foundClient = clientGHSugarRepository.findByName(trackingEntity.getAccountName());
+                //trying to match sugar client to tracking account by name ignoring case
+                foundClient = clientGHSugarRepository.findByNameIgnoreCaseContaining(trackingEntity.getAccountName());
+                if (foundClient != null) {
+                    break;
+                }
+
+                foundClient = clientGHSugarRepository.findByWebsiteIgnoreCaseContaining(
+                        HttpReformatter.getCoreHostName(trackingEntity.getWebsite()));
                 if (foundClient != null) {
                     break;
                 }
